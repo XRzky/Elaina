@@ -4,16 +4,31 @@ module.exports = class extends Command {
 
 	constructor(...args) {
 		super(...args, {
-			aliases: ['reboot'],
-			description: 'If running under PM2, the bot will restart.',
+			aliases: [],
+			description: 'Reload specific commands',
 			category: 'Developer',
+			usage: '[commandName]',
 			ownerOnly: true
 		});
 	}
-    async run(message) {
-        this.client.utils.loadCommands()
-        .then(() => message.channel.send(`Reloaded all the commands!`))
-        .catch(err => message.channel.send(`There was a error trying to load the commands!\n**Error:**\`\`\`xl\n${err}\n\`\`\``));
-    }
-    
+
+	async run(message, [cmd]) {
+		if (!cmd) {
+			return message.reply('Please input the name of the command to reloaded!');
+		}
+
+		const command = this.client.commands.get(cmd) || this.client.commands.get(this.client.aliases.get(cmd));
+
+		try {
+			delete require.cache[require.resolve(`../${command.category}/${command.name.toProperCase()}.js`)];
+			const File = require(`../${command.category}/${command.name.toProperCase()}.js`);
+			const Commands = new File(this.client, command.name.toLowerCase());
+			this.client.commands.delete(command.name);
+			await this.client.commands.set(command.name, Commands);
+			return message.reply(`Successfully reloaded the \`${command.name}\` command!`);
+		} catch {
+			return message.reply(`Can't find \`${cmd}\` command!`);
+		}
+	}
+
 };
