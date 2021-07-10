@@ -1,6 +1,6 @@
 {
   "name": "elaina",
-  "version": "3.3.0",
+  "version": "4.0.0-dev",
   "description": "Elaina is a powerful Discord bot made with Node.js with a lot of commands!",
   "main": "src/index.js",
   "scripts": {
