@@ -1,5 +1,4 @@
 const Event = require('../../Structures/Event.js');
-const { version } = require('../../../package.json');
 const chalk = require('chalk');
 const moment = require('moment');
 
@@ -27,14 +26,14 @@ module.exports = class extends Event {
 		checkUnmutes.init(this.client);
 
 		const activities = [
-			`${this.client.prefix}help`,
-			`@${this.client.user.username} help`
+			`${this.client.guilds.cache.size.formatNumber()} guilds`,
+			`${this.client.guilds.cache.reduce((a, b) => a + b.memberCount, 0).formatNumber()} users`
 		];
 
 		let i = 0;
 		setInterval(() => {
-			this.client.user.setActivity({ name: `${activities[i++ % activities.length]} | v${version}`, type: 'PLAYING' });
-		}, 20000);
+			this.client.user.setActivity({ name: `@${this.client.user.username} help | ${activities[i++ % activities.length]}`, type: 'LISTENING' });
+		}, 60000);
 	}
 
 };
